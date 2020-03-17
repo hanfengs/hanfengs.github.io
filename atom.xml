@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://hanfengs.github.io</id>
     <title>hanfengs</title>
-    <updated>2020-03-16T03:23:24.081Z</updated>
+    <updated>2020-03-17T10:23:02.675Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://hanfengs.github.io"/>
     <link rel="self" href="https://hanfengs.github.io/atom.xml"/>
@@ -10,6 +10,15 @@
     <logo>https://hanfengs.github.io/images/avatar.png</logo>
     <icon>https://hanfengs.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, hanfengs</rights>
+    <entry>
+        <title type="html"><![CDATA[创建]]></title>
+        <id>https://hanfengs.github.io/post/chuang-jian</id>
+        <link href="https://hanfengs.github.io/post/chuang-jian">
+        </link>
+        <updated>2019-08-14T09:33:16.000Z</updated>
+        <content type="html"><![CDATA[<p>创建时有404，等待40分钟左右，生效。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Hello Gridea]]></title>
         <id>https://hanfengs.github.io/post/hello-gridea</id>
