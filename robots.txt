@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hanfengs.github.io/sitemap.xml
