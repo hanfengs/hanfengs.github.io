@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<meta name="generator" content="Gridea Pro 1.2.0">
+<title>闪念 | Hanfeng</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="/favicon.ico?v=1779271498">
+<link rel="stylesheet" href="/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="记录编程学习与思考">
+    <style>
+      .memos-container {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+      
+      /* Heatmap Card */
+      .heatmap-wrap {
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e9ecef;
+        padding: 24px;
+        margin-bottom: 32px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        overflow-x: auto;
+        /* hide scrollbar */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .heatmap-wrap::-webkit-scrollbar {
+        display: none;
+      }
+      #heatmap-root table {
+        border-collapse: separate;
+        border-spacing: 3px;
+        margin: 0 auto;
+      }
+      .heatmap-month-label {
+        font-size: 11px;
+        color: #868e96;
+        text-align: left;
+        padding-bottom: 4px;
+      }
+      .heatmap-day-label {
+        font-size: 11px;
+        color: #868e96;
+        padding-right: 8px;
+        text-align: right;
+        min-width: 16px;
+      }
+      #heatmap-root td.cell {
+        width: 11px;
+        height: 11px;
+        border-radius: 2px;
+        background-color: #ebedf0;
+        transition: transform 0.1s ease;
+      }
+      #heatmap-root td.cell:hover {
+        transform: scale(1.3);
+        z-index: 10;
+      }
+      .heatmap-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 12px;
+        font-size: 12px;
+        color: #868e96;
+        border-top: 1px solid #f1f3f5;
+        padding-top: 12px;
+      }
+      .heatmap-legend {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .heatmap-legend-cell {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+      }
+      
+      /* Memo Items */
+      .memos-list {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .memo-item {
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e9ecef;
+        padding: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+      .memo-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        border-color: #dee2e6;
+      }
+      .memo-body {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #495057;
+        position: relative;
+        max-height: 160px;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+      }
+      .memo-body.collapsed::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 48px;
+        background: linear-gradient(to top, #ffffff, rgba(255, 255, 255, 0));
+        pointer-events: none;
+      }
+      .memo-content p {
+        margin-bottom: 12px;
+      }
+      .memo-content p:last-child {
+        margin-bottom: 0;
+      }
+      .memo-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .memo-tag {
+        font-size: 12px;
+        color: #7048e8;
+        background: #f3f0ff;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-weight: 500;
+      }
+      .memo-meta {
+        margin-top: 16px;
+        font-size: 13px;
+        color: #adb5bd;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #f1f3f5;
+        padding-top: 12px;
+      }
+      .memo-expand-btn {
+        background: none;
+        border: none;
+        color: #7048e8;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 8px 0 0 0;
+        outline: none;
+        transition: color 0.2s ease;
+        display: block;
+        margin-top: 8px;
+        text-align: left;
+      }
+      .memo-expand-btn:hover {
+        color: #5f3dc4;
+      }
+      .memo-hide {
+        display: none !important;
+      }
+      
+      /* Pagination */
+      .memo-pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin-top: 40px;
+      }
+      .memo-pagination a {
+        font-size: 14px;
+        padding: 8px 16px;
+        background: #ffffff;
+        border: 1px solid #e9ecef;
+        border-radius: 20px;
+        color: #495057;
+        transition: all 0.2s ease;
+        text-decoration: none;
+      }
+      .memo-pagination a:hover:not(.disabled) {
+        background: #f1f3f5;
+        border-color: #ced4da;
+        transform: translateY(-1px);
+      }
+      .memo-pagination a.disabled {
+        color: #ced4da;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+      .memo-page-info {
+        font-size: 14px;
+        color: #868e96;
+      }
+      @media (max-width: 800px) {
+        .memos-container {
+          padding: 0 8px;
+        }
+      }
+    </style>
+  <meta name="description" content="记录编程学习与思考">
+<link rel="canonical" href="https://hanfengs.github.io/memos/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Hanfeng","url":"https://hanfengs.github.io","description":"记录编程学习与思考","potentialAction":{"@type":"SearchAction","query-input":"required name=search_term_string","target":"https://hanfengs.github.io/search?q={search_term_string}"}}</script>
+<meta property="og:title" content="Hanfeng">
+<meta property="og:description" content="记录编程学习与思考">
+<meta property="og:url" content="https://hanfengs.github.io/memos/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hanfeng">
+<meta property="og:image" content="/images/avatar.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://hanfengs.github.io/memos/">
+<meta name="twitter:title" content="Hanfeng">
+<meta name="twitter:description" content="记录编程学习与思考">
+<meta name="twitter:image" content="/images/avatar.png">
+</head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="/">
+        <img src="/images/avatar.png?v=1779271498" class="site-logo">
+        <h1 class="site-title">Hanfeng</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/memos" class="site-nav">
+            闪念
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/links" class="site-nav" target="_blank">
+            友链
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      记录编程学习与思考
+    </div>
+    <div class="site-footer">
+      Powered by Gridea Pro | <a class="rss" href="/feed.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="memos-container">
+            <h2 class="archives-title">闪念</h2>
+            
+            
+
+              <!-- 热力图 -->
+              <div class="heatmap-wrap">
+                <div id="heatmap-root"></div>
+                <div class="heatmap-footer">
+                  <span id="heatmap-total"></span>
+                  <div class="heatmap-legend">
+                    <span>少</span>
+                    <span class="heatmap-legend-cell" style="background:#ebedf0;"></span>
+                    <span class="heatmap-legend-cell" style="background:#9be9a8;"></span>
+                    <span class="heatmap-legend-cell" style="background:#40c463;"></span>
+                    <span class="heatmap-legend-cell" style="background:#28df99;"></span>
+                    <span class="heatmap-legend-cell" style="background:#1a9f6b;"></span>
+                    <span>多</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 闪念列表 -->
+              <div class="memos-list">
+                
+                  <div class="memo-item " data-created="2026-05-07">
+                    <div class="memo-body">
+                      <div class="memo-content">
+                        <p>这个闪念保存在哪里啊？</p>
+<p>#哪里啊</p>
+
+                      </div>
+                    </div>
+                    
+                      <div class="memo-tags">
+                        
+                          <span class="memo-tag"># 哪里啊</span>
+                        
+                      </div>
+                    
+                    <div class="memo-meta">
+                      <time>2026-05-07</time>
+                    </div>
+                  </div>
+                
+                  <div class="memo-item " data-created="2026-05-07">
+                    <div class="memo-body">
+                      <div class="memo-content">
+                        <p>开了这个博客。不知道能坚持多久，但至少今天，我开始了。</p>
+<p>#日常 #里程碑</p>
+
+                      </div>
+                    </div>
+                    
+                      <div class="memo-tags">
+                        
+                          <span class="memo-tag"># 日常</span>
+                        
+                          <span class="memo-tag"># 里程碑</span>
+                        
+                      </div>
+                    
+                    <div class="memo-meta">
+                      <time>2026-05-07</time>
+                    </div>
+                  </div>
+                
+                  <div class="memo-item " data-created="2026-05-07">
+                    <div class="memo-body">
+                      <div class="memo-content">
+                        <p>有些话，发朋友圈怕矫情，发微博怕没人看，跟朋友说怕打扰。<br />
+放在自己的博客里刚刚好——说了，但没有打扰任何人。</p>
+
+                      </div>
+                    </div>
+                    
+                    <div class="memo-meta">
+                      <time>2026-05-07</time>
+                    </div>
+                  </div>
+                
+                  <div class="memo-item " data-created="2026-05-07">
+                    <div class="memo-body">
+                      <div class="memo-content">
+                        <p>翻到两年前写的一段话，完全不记得当时为什么写。但那个情绪，隔着屏幕都能感觉到。<br />
+幸好当时写下来了。不然这段经历就真的不存在了。</p>
+<p>#记忆</p>
+
+                      </div>
+                    </div>
+                    
+                      <div class="memo-tags">
+                        
+                          <span class="memo-tag"># 记忆</span>
+                        
+                      </div>
+                    
+                    <div class="memo-meta">
+                      <time>2026-05-07</time>
+                    </div>
+                  </div>
+                
+                  <div class="memo-item " data-created="2026-05-07">
+                    <div class="memo-body">
+                      <div class="memo-content">
+                        <p>今天什么也没写。但打开了编辑器，看了一会儿光标在那里闪。<br />
+这也算一种开始吧。</p>
+
+                      </div>
+                    </div>
+                    
+                    <div class="memo-meta">
+                      <time>2026-05-07</time>
+                    </div>
+                  </div>
+                
+                  <div class="memo-item " data-created="2026-05-07">
+                    <div class="memo-body">
+                      <div class="memo-content">
+                        <p>有个事困扰了我好几天，今晚试着写下来，写着写着突然就不纠结了。<br />
+文字虽然没给我答案，但这个事情仿佛已经不重要了。</p>
+<p>#随想</p>
+
+                      </div>
+                    </div>
+                    
+                      <div class="memo-tags">
+                        
+                          <span class="memo-tag"># 随想</span>
+                        
+                      </div>
+                    
+                    <div class="memo-meta">
+                      <time>2026-05-07</time>
+                    </div>
+                  </div>
+                
+              </div>
+
+              <!-- 分页 -->
+              <div class="memo-pagination" id="memo-pagination">
+                <a href="javascript:void(0);" id="memo-prev-btn" class="disabled" onclick="memoPrevPage()">← 上一页</a>
+                <span class="memo-page-info" id="memo-page-info"></span>
+                <a href="javascript:void(0);" id="memo-next-btn" onclick="memoNextPage()">下一页 →</a>
+              </div>
+
+              <script>
+                (function () {
+                  var MEMO_PER_PAGE = 15;
+                  var currentPage = 1;
+                  var items = document.querySelectorAll('.memo-item');
+                  var totalItems = items.length;
+                  var totalPages = Math.ceil(totalItems / MEMO_PER_PAGE);
+
+                  // 初始化折叠
+                  items.forEach(function (item) {
+                    var body = item.querySelector('.memo-body');
+                    var content = item.querySelector('.memo-content');
+                    if (content && content.scrollHeight > 160) {
+                      body.classList.add('collapsed');
+                      var btn = document.createElement('button');
+                      btn.className = 'memo-expand-btn';
+                      btn.textContent = '展开全文 ▼';
+                      btn.onclick = function () {
+                        if (body.classList.contains('collapsed')) {
+                          body.style.maxHeight = content.scrollHeight + 'px';
+                          body.classList.remove('collapsed');
+                          btn.textContent = '收起 ▲';
+                        } else {
+                          body.style.maxHeight = '160px';
+                          body.classList.add('collapsed');
+                          btn.textContent = '展开全文 ▼';
+                        }
+                      };
+                      body.parentNode.insertBefore(btn, body.nextSibling);
+                    }
+                  });
+
+                  // ======= 热力图生成 =======
+                  var heatmapData = {};
+                  items.forEach(function (item) {
+                    var d = item.getAttribute('data-created');
+                    if (d) {
+                      var dateStr = d.substring(0, 10);
+                      heatmapData[dateStr] = (heatmapData[dateStr] || 0) + 1;
+                    }
+                  });
+
+                  var COLORS = ['#ebedf0', '#9be9a8', '#40c463', '#28df99', '#1a9f6b'];
+                  var MONTHS = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+                  var DAYS = ['日', '一', '二', '三', '四', '五', '六'];
+
+                  var today = new Date();
+                  today.setHours(0, 0, 0, 0);
+                  var endDay = today.getDay();
+                  var totalDays = 52 * 7 + endDay + 1;
+                  var startDate = new Date(today);
+                  startDate.setDate(startDate.getDate() - totalDays + 1);
+                  startDate.setDate(startDate.getDate() - startDate.getDay());
+
+                  var totalWeeks = Math.ceil(totalDays / 7);
+
+                  var weeks = [];
+                  for (var w = 0; w < totalWeeks; w++) {
+                    var week = [];
+                    for (var d = 0; d < 7; d++) {
+                      var cellDate = new Date(startDate);
+                      cellDate.setDate(cellDate.getDate() + w * 7 + d);
+                      var key = cellDate.getFullYear() + '-' + String(cellDate.getMonth() + 1).padStart(2, '0') + '-' + String(cellDate.getDate()).padStart(2, '0');
+                      var count = heatmapData[key] || 0;
+                      var level = count === 0 ? 0 : count === 1 ? 1 : count <= 3 ? 2 : count <= 5 ? 3 : 4;
+                      var future = cellDate > today;
+                      week.push({ date: cellDate, key: key, count: count, level: level, future: future, month: cellDate.getMonth() });
+                    }
+                    weeks.push(week);
+                  }
+
+                  var monthLabels = [];
+                  var lastMonth = -1;
+                  for (var w = 0; w < weeks.length; w++) {
+                    var firstDay = weeks[w][0];
+                    if (!firstDay.future && firstDay.month !== lastMonth) {
+                      monthLabels.push({ weekIndex: w, label: MONTHS[firstDay.month] });
+                      lastMonth = firstDay.month;
+                    }
+                  }
+
+                  var html = '<table style="min-width: 600px;">';
+                  html += '<tr><td class="heatmap-day-label"></td>';
+                  var monthColIdx = 0;
+                  for (var w = 0; w < totalWeeks; w++) {
+                    if (monthColIdx < monthLabels.length && monthLabels[monthColIdx].weekIndex === w) {
+                      var nextIdx = monthColIdx + 1 < monthLabels.length ? monthLabels[monthColIdx + 1].weekIndex : totalWeeks;
+                      var span = nextIdx - w;
+                      html += '<td colspan="' + span + '" class="heatmap-month-label">' + monthLabels[monthColIdx].label + '</td>';
+                      w += span - 1;
+                      monthColIdx++;
+                    } else {
+                      html += '<td class="heatmap-month-label"></td>';
+                    }
+                  }
+                  html += '</tr>';
+
+                  for (var d = 0; d < 7; d++) {
+                    html += '<tr>';
+                    html += '<td class="heatmap-day-label">' + DAYS[d] + '</td>';
+                    for (var w = 0; w < weeks.length; w++) {
+                      var c = weeks[w][d];
+                      if (c.future) {
+                        html += '<td></td>';
+                      } else {
+                        html += '<td class="cell" data-level="' + c.level + '" style="background:' + COLORS[c.level] + ';" title="' + c.key + ': ' + c.count + ' 条闪念"></td>';
+                      }
+                    }
+                    html += '</tr>';
+                  }
+
+                  html += '</table>';
+                  var root = document.getElementById('heatmap-root');
+                  root.innerHTML = html;
+                  document.getElementById('heatmap-total').textContent = '过去一年共记录 ' + totalItems + ' 条闪念';
+
+                  setTimeout(function () {
+                    var wrap = document.querySelector('.heatmap-wrap');
+                    if (wrap) {
+                      wrap.scrollLeft = wrap.scrollWidth;
+                    }
+                  }, 100);
+
+                  // ======= 分页 =======
+                  function updatePagination() {
+                    for (var i = 0; i < items.length; i++) {
+                      var start = (currentPage - 1) * MEMO_PER_PAGE;
+                      var end = currentPage * MEMO_PER_PAGE;
+                      if (i >= start && i < end) {
+                        items[i].classList.remove('memo-hide');
+                      } else {
+                        items[i].classList.add('memo-hide');
+                      }
+                    }
+                    var prevBtn = document.getElementById('memo-prev-btn');
+                    var nextBtn = document.getElementById('memo-next-btn');
+                    var pageInfo = document.getElementById('memo-page-info');
+
+                    prevBtn.className = currentPage <= 1 ? 'disabled' : '';
+                    nextBtn.className = currentPage >= totalPages ? 'disabled' : '';
+                    pageInfo.textContent = currentPage + ' / ' + totalPages;
+
+                    if (totalPages <= 1) {
+                      document.getElementById('memo-pagination').style.display = 'none';
+                    } else {
+                      document.getElementById('memo-pagination').style.display = 'flex';
+                    }
+                  }
+
+                  window.memoNextPage = function () {
+                    if (currentPage < totalPages) { currentPage++; updatePagination(); window.scrollTo(0, 0); }
+                  };
+                  window.memoPrevPage = function () {
+                    if (currentPage > 1) { currentPage--; updatePagination(); window.scrollTo(0, 0); }
+                  };
+
+                  updatePagination();
+                })();
+              </script>
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  <script>console.log("\n%c ✦ Gridea Pro v1.2.0 %c · Theme: simple v1.1.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
+</body>
+</html>
